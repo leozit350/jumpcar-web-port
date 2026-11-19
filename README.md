@@ -2,7 +2,7 @@
 
 A browser port of the Jump Car mobile game, written from the decompiled game code. It runs as a static page with no build step and no server-side code.
 
-The art and sounds in `assets/` were extracted from the original game. This repository is private and for personal use only.
+The art and sounds in `assets/` were extracted from the original game. This repository is private and for personal use only. Do not make it public.
 
 ## Run locally
 
