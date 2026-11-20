@@ -27,7 +27,8 @@
   let muteButton = null;
   let flipButton = null;   // on-screen X: reverses the blue car's direction during play
   let flipLabel = null;
-  let controlsHint = null; // title-screen menu: how to play (shown above the SOUND label)
+  let controlsHint = null; // title-screen menu: how to play (labels)
+  let controlsBacking = null; // solid light plate behind the labels, for contrast
 
   // ------------------------------------------------------------- canvas / FScreen
   function layoutCanvas() {
@@ -184,29 +185,41 @@
     return Math.abs(p.x - flipButton.x) <= 25 + 6 && Math.abs(p.y - flipButton.y) <= 10 + 6;
   }
 
-  // Title-screen menu: a short controls reference at the top of the screen, in black
-  // so it reads against the light title background. Hidden during play.
-  const CONTROLS_LINES = ["TAP OR HOLD TO JUMP", "X FLIP DIRECTION   M SOUND"];
+  // Title-screen menu: a short controls reference at the top of the screen, white text
+  // on a black plate so it reads against any part of the title background. Hidden during play.
+  const CONTROLS_LINES = ["Z to jump", "X to switch directions"];
   function makeControlsHint() {
+    controlsBacking = new JC.Sprite("Blank");
+    controlsBacking.color = [0, 0, 0];
+    controlsBacking.alpha = 0.85;
+    stageGui.addChild(controlsBacking);
     controlsHint = CONTROLS_LINES.map((text) => {
       const label = new JC.Label(text);
-      label.color = [0, 0, 0];
+      label.color = [255, 255, 255];
       label.anchorX = 0.5;
       label.anchorY = 1;   // y is the top edge of the text
-      label.alpha = 0.9;
+      label.alpha = 1;
       stageGui.addChild(label);
       return label;
     });
   }
   function placeControlsHint() {
     if (!controlsHint) return;
-    const lineStep = 14;
+    const lineStep = 20;
+    let maxWidth = 0;
     controlsHint.forEach((label, i) => {
       label.scaleX = label.scaleY = 1;
       label.x = 0;
       label.y = S.halfHeight - 8 - i * lineStep;
       JC.Effects.scaleToFitWidth(label, S.width - 16);
+      maxWidth = Math.max(maxWidth, label.width * label.scaleX);
     });
+    // Plate covers the top edge of the screen and all label lines, with a small margin.
+    const plateHeight = controlsHint.length * lineStep + 8;
+    controlsBacking.width = maxWidth + 12;
+    controlsBacking.height = plateHeight;
+    controlsBacking.x = 0;
+    controlsBacking.y = S.halfHeight - plateHeight * 0.5;
   }
 
   function toggleSound() {
@@ -298,6 +311,7 @@
     if (controlsHint && page) {
       const onTitle = page.state === 0;
       for (const label of controlsHint) label.visible = onTitle;
+      controlsBacking.visible = onTitle;
     }
     if (flipButton && page) {
       const playing = page.state === 2;
