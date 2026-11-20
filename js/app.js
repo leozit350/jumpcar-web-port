@@ -27,6 +27,7 @@
   let muteButton = null;
   let flipButton = null;   // on-screen X: reverses the blue car's direction during play
   let flipLabel = null;
+  let controlsHint = null; // title-screen menu: how to play (shown above the SOUND label)
 
   // ------------------------------------------------------------- canvas / FScreen
   function layoutCanvas() {
@@ -183,6 +184,29 @@
     return Math.abs(p.x - flipButton.x) <= 25 + 6 && Math.abs(p.y - flipButton.y) <= 10 + 6;
   }
 
+  // Title-screen menu: a short controls reference, centred above the SOUND label.
+  // Hidden during play, where the on-screen X button sits in the bottom-left corner.
+  const CONTROLS_LINES = ["TAP OR HOLD TO JUMP", "X FLIP DIRECTION   M SOUND"];
+  function makeControlsHint() {
+    controlsHint = CONTROLS_LINES.map((text) => {
+      const label = new JC.Label(text);
+      label.anchorX = 0.5;
+      label.anchorY = 0;
+      label.alpha = 0.75;
+      stageGui.addChild(label);
+      return label;
+    });
+  }
+  function placeControlsHint() {
+    if (!controlsHint) return;
+    const lineStep = 14;
+    controlsHint.forEach((label, i) => {
+      label.x = 0;
+      // Line 0 sits highest; the last line sits just above the SOUND label.
+      label.y = -S.halfHeight + 22 + (controlsHint.length - 1 - i) * lineStep;
+    });
+  }
+
   function toggleSound() {
     JC.Settings.soundFxOn = !JC.Settings.soundFxOn;
     JC.Settings.save();
@@ -247,6 +271,7 @@
     applyCanvasState();
     placeMuteButton();
     placeFlipButton();
+    placeControlsHint();
   });
   window.addEventListener("pagehide", () => {
     JC.Stats.save();
@@ -268,6 +293,10 @@
     }
     // Sound switch only on the title screen so it never covers the playfield.
     if (muteButton && page) muteButton.visible = page.state === 0;
+    if (controlsHint && page) {
+      const onTitle = page.state === 0;
+      for (const label of controlsHint) label.visible = onTitle;
+    }
     if (flipButton && page) {
       const playing = page.state === 2;
       flipButton.visible = playing;
@@ -298,6 +327,8 @@
     makeFlash();
     makeMuteButton();
     placeMuteButton();
+    makeControlsHint();
+    placeControlsHint();
     makeFlipButton();
     placeFlipButton();
 

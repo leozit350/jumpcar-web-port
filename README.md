@@ -1,8 +1,12 @@
-# Jump Car web port (private)
+# Jump Car web port
 
-A browser port of the Jump Car mobile game, written from the decompiled game code. It runs as a static page with no build step and no server-side code.
+A web port of the popular Android game Jump Car. It was written from the decompiled game code and runs in the browser as a static page with no build step and no server-side code.
 
-The art and sounds in `assets/` were extracted from the original game. This repository is private and for personal use only. Do not make it public.
+In Jump Car you control a car that climbs a stack of layers, jumping and reversing direction to keep going. Your score is the number of layers you reach.
+
+Play it in the browser at https://leozit350.github.io/jumpcar-web-port/
+
+The art and sounds in `assets/` were extracted from the original Android game.
 
 ## Run locally
 
@@ -16,7 +20,15 @@ Open `http://127.0.0.1:8002/`. Do not expose this server publicly.
 
 ## Controls
 
-Tap to jump and hold to climb, as in the original. On desktop, Space or ArrowUp acts as a press, and `M` toggles sound. A `SOUND ON`/`SOUND OFF` label in the bottom-right corner does the same on the title screen.
+The title screen shows a short controls reference above the sound toggle.
+
+| Input | Action |
+| --- | --- |
+| Tap or hold the screen | Jump (hold to climb) |
+| On-screen `X` button, bottom-left (during play) | Reverse the car's direction |
+| Space, Z, or ArrowUp | Jump (desktop) |
+| `X` key | Reverse the car's direction (desktop) |
+| `M` key, or the `SOUND ON`/`SOUND OFF` label in the bottom-right | Toggle sound effects |
 
 ## Files
 
