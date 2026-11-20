@@ -184,15 +184,16 @@
     return Math.abs(p.x - flipButton.x) <= 25 + 6 && Math.abs(p.y - flipButton.y) <= 10 + 6;
   }
 
-  // Title-screen menu: a short controls reference, centred above the SOUND label.
-  // Hidden during play, where the on-screen X button sits in the bottom-left corner.
+  // Title-screen menu: a short controls reference at the top of the screen, in black
+  // so it reads against the light title background. Hidden during play.
   const CONTROLS_LINES = ["TAP OR HOLD TO JUMP", "X FLIP DIRECTION   M SOUND"];
   function makeControlsHint() {
     controlsHint = CONTROLS_LINES.map((text) => {
       const label = new JC.Label(text);
+      label.color = [0, 0, 0];
       label.anchorX = 0.5;
-      label.anchorY = 0;
-      label.alpha = 0.75;
+      label.anchorY = 1;   // y is the top edge of the text
+      label.alpha = 0.9;
       stageGui.addChild(label);
       return label;
     });
@@ -201,9 +202,10 @@
     if (!controlsHint) return;
     const lineStep = 14;
     controlsHint.forEach((label, i) => {
+      label.scaleX = label.scaleY = 1;
       label.x = 0;
-      // Line 0 sits highest; the last line sits just above the SOUND label.
-      label.y = -S.halfHeight + 22 + (controlsHint.length - 1 - i) * lineStep;
+      label.y = S.halfHeight - 8 - i * lineStep;
+      JC.Effects.scaleToFitWidth(label, S.width - 16);
     });
   }
 
